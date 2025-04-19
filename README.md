@@ -247,7 +247,7 @@ function NotificationExample() {
 
 1. Install required dependencies:
 ```bash
-npm install react-icons framer-motion uuid
+npm install react-icons  
 ```
 
 2. Copy the component files into your project.
