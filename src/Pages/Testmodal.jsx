@@ -23,7 +23,7 @@ const Testmodal = () => {
         onClose={() => setModalOpen(false)}
         onConfirm={handleConfirm}
         title="Confirm gender"
-        children="Are you a male?"
+        children="Are you a gay?"
       />
         
      

@@ -16,33 +16,88 @@ export const Inputfield = ({
   const inputId = `input-${name}`;
   const hasError = Boolean(errormsg);
 
+  const containerStyle = {
+    width: "100%",
+    maxWidth: "28rem", 
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginBottom: "1rem", 
+  };
+
+  const labelContainerStyle = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingLeft: "0.25rem", 
+    paddingRight: "0.25rem", 
+    marginBottom: "0.25rem", 
+  };
+
+  const labelStyle = {
+    display: "block",
+    fontSize: "0.875rem", 
+    fontWeight: "500", 
+    color: "#374151", 
+  };
+
+  const requiredStyle = {
+    color: "#ef4444", 
+    marginLeft: "0.125rem", 
+  };
+
+  const errorTextStyle = {
+    fontSize: "0.875rem", 
+    color: "#dc2626", 
+  };
+
+  const inputContainerStyle = {
+    display: "flex",
+    alignItems: "center",
+    gap: "0.5rem", 
+    padding: "0.5rem 0.75rem", 
+    borderWidth: "2px", 
+    borderRadius: "0.375rem", 
+    width: "100%",
+    transition: "border-color 0.3s ease",
+    borderColor: hasError ? "#ef4444" : "#9ca3af", 
+  };
+
+  const iconStyle = {
+    color: "#6b7280", 
+  };
+
+  const inputStyle = {
+    flex: 1,
+    outline: "none",
+    fontSize: "0.875rem", 
+    color: "#1f2937", 
+    background: "transparent", 
+  };
+
+  const helperTextStyle = {
+    fontSize: "0.75rem", 
+    color: "#6b7280", 
+    marginTop: "0.25rem", 
+  };
+
   return (
-    <div className="w-full max-w-md mx-auto mb-4">
-     
-      <div className="flex items-center justify-between px-1 mb-1">
+    <div style={containerStyle}>
+      <div style={labelContainerStyle}>
         {label && (
-          <label
-            htmlFor={inputId}
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor={inputId} style={labelStyle}>
             {label}
-            {required && <span className="text-red-500 ml-0.5">*</span>}
+            {required && <span style={requiredStyle}>*</span>}
           </label>
         )}
         {hasError && (
-          <p className="text-sm text-red-600" role="alert">
+          <p style={errorTextStyle} role="alert">
             {errormsg}
           </p>
         )}
       </div>
 
-      
-      <div
-        className={`flex items-center gap-2 px-3 py-2 border-2 rounded-md w-full transition ${
-          hasError ? "border-red-500" : "border-gray-400"
-        }`}
-      >
-        {icon && <span className="text-gray-500">{icon}</span>}
+      <div style={inputContainerStyle}>
+        {icon && <span style={iconStyle}>{icon}</span>}
         <input
           id={inputId}
           type={type}
@@ -53,14 +108,13 @@ export const Inputfield = ({
           placeholder={placeholder}
           aria-invalid={hasError}
           aria-describedby={`${inputId}-helper`}
-          className="flex-1 outline-none text-sm text-gray-800 placeholder-gray-400 bg-transparent"
+          style={inputStyle}
           {...props}
         />
       </div>
 
-     
       {helperText && !hasError && (
-        <p id={`${inputId}-helper`} className="text-xs text-gray-500 mt-1">
+        <p id={`${inputId}-helper`} style={helperTextStyle}>
           {helperText}
         </p>
       )}

@@ -12,41 +12,109 @@ export const Button = ({
   onClick = () => {},
   ...props
 }) => {
-  const variantClasses = {
-    primary: "bg-red-600 text-white hover:bg-red-700",
-    secondary: "bg-green-600 text-white hover:bg-green-700",
-    tertiary: "bg-black text-white hover:bg-[#212121]",
+  
+  const variantStyles = {
+    primary: {
+      backgroundColor: "#dc2626", 
+      color: "#ffffff", 
+    },
+    secondary: {
+      backgroundColor: "#16a34a", 
+      color: "#ffffff", 
+    },
+    tertiary: {
+      backgroundColor: "#000000", 
+      color: "#ffffff", 
+    }
   };
 
-  const sizeClasses = {
-    small: "text-sm px-3 py-1.5",
-    medium: "text-base px-4 py-2",
-    large: "text-lg px-5 py-3",
+  
+  const variantHoverStyles = {
+    primary: {
+      backgroundColor: "#b91c1c", 
+    },
+    secondary: {
+      backgroundColor: "#15803d", 
+    },
+    tertiary: {
+      backgroundColor: "#212121", 
+    }
   };
 
-  const commonStyles = `rounded-md flex items-center gap-2 transition`;
+  
+  const sizeStyles = {
+    small: {
+      fontSize: "0.875rem", 
+      padding: "0.375rem 0.75rem", 
+    },
+    medium: {
+      fontSize: "1rem", 
+      padding: "0.5rem 1rem", 
+    },
+    large: {
+      fontSize: "1.125rem", 
+      padding: "0.75rem 1.25rem", 
+    }
+  };
 
-  const disabledStyle = disabled
-    ? "opacity-50 cursor-not-allowed"
-    : "";
+ 
+  const commonStyles = {
+    borderRadius: "0.375rem", 
+    display: "flex",
+    alignItems: "center",
+    gap: "0.5rem", 
+    transition: "background-color 0.3s", 
+    cursor: disabled ? "not-allowed" : "pointer",
+    opacity: disabled ? "0.5" : "1",
+  };
+
+  
+  const buttonStyle = {
+    ...commonStyles,
+    ...variantStyles[variant],
+    ...sizeStyles[size],
+  };
+
+  
+  const [isHovering, setIsHovering] = React.useState(false);
+
+  const handleMouseEnter = () => {
+    if (!disabled) setIsHovering(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovering(false);
+  };
+
+ 
+  if (isHovering) {
+    buttonStyle.backgroundColor = variantHoverStyles[variant].backgroundColor;
+  }
 
   return (
     <button
       type={type}
-      className={`${commonStyles} ${variantClasses[variant]} ${sizeClasses[size]} ${disabledStyle}`}
+      style={buttonStyle}
       onClick={onClick}
       disabled={disabled || loading}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       {...props}
     >
       {loading ? (
         <svg
-          className="animate-spin h-5 w-5 text-white"
+          style={{
+            animation: "spin 1s linear infinite",
+            height: "1.25rem", 
+            width: "1.25rem",
+            color: "currentColor", 
+          }}
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
         >
           <circle
-            className="opacity-25"
+            style={{ opacity: "0.25" }}
             cx="12"
             cy="12"
             r="10"
@@ -54,7 +122,7 @@ export const Button = ({
             strokeWidth="4"
           ></circle>
           <path
-            className="opacity-75"
+            style={{ opacity: "0.75" }}
             fill="currentColor"
             d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8z"
           ></path>
@@ -68,3 +136,4 @@ export const Button = ({
     </button>
   );
 };
+

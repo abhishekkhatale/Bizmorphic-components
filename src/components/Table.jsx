@@ -46,29 +46,148 @@ const Table = ({ columns, data, itemsPerPage = 5 }) => {
     }
   };
 
+  const containerStyle = {
+    width: "100%",
+    padding: "1.5rem",
+    backgroundColor: "#ffffff",
+    border: "1px solid #e5e7eb",
+    borderRadius: "0.75rem",
+    boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+  };
+
+  const searchInputStyle = {
+    marginBottom: "1rem",
+    padding: "0.5rem 1rem",
+    border: "1px solid #d1d5db",
+    borderRadius: "0.375rem",
+    width: "100%",
+    maxWidth: "20rem",
+    outline: "none",
+  };
+
+  const searchInputFocusStyle = {
+    ringWidth: "1px",
+    ringColor: "#9ca3af",
+  };
+
+  const tableContainerStyle = {
+    overflowX: "auto",
+  };
+
+  const tableStyle = {
+    minWidth: "100%",
+    fontSize: "0.875rem",
+    color: "#1f2937",
+    borderCollapse: "collapse",
+  };
+
+  const tableHeadRowStyle = {
+    borderBottom: "1px solid #e5e7eb",
+    backgroundColor: "#f9fafb",
+    fontSize: "0.75rem",
+    textTransform: "uppercase",
+    color: "#6b7280",
+    letterSpacing: "0.05em",
+  };
+
+  const tableHeadCellStyle = {
+    padding: "0.75rem 1.25rem",
+    textAlign: "left",
+    fontWeight: "500",
+    cursor: "pointer",
+    userSelect: "none",
+  };
+
+  const tableHeadCellHoverStyle = {
+    color: "#374151",
+  };
+
+  const tableBodyRowStyle = {
+    borderBottom: "1px solid #f3f4f6",
+    transition: "background-color 0.2s",
+  };
+
+  const tableBodyRowHoverStyle = {
+    backgroundColor: "#f9fafb",
+  };
+
+  const tableBodyCellStyle = {
+    padding: "0.75rem 1.25rem",
+  };
+
+  const noDataCellStyle = {
+    textAlign: "center",
+    padding: "1.5rem 0",
+    color: "#9ca3af",
+  };
+
+  const paginationContainerStyle = {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: "1.5rem",
+    fontSize: "0.875rem",
+    color: "#4b5563",
+  };
+
+  const paginationButtonStyle = {
+    padding: "0.5rem 1rem",
+    border: "1px solid #d1d5db",
+    borderRadius: "0.375rem",
+    transition: "background-color 0.2s",
+    cursor: "pointer",
+  };
+
+  const paginationButtonHoverStyle = {
+    backgroundColor: "#f3f4f6",
+  };
+
+  const paginationButtonDisabledStyle = {
+    opacity: "0.5",
+    cursor: "not-allowed",
+  };
+
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [hoveredHeaderCell, setHoveredHeaderCell] = useState(null);
+  const [hoveredRow, setHoveredRow] = useState(null);
+  const [hoveredPrevButton, setHoveredPrevButton] = useState(false);
+  const [hoveredNextButton, setHoveredNextButton] = useState(false);
+
   return (
-    <div className="w-full p-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+    <div style={containerStyle}>
       <input
         type="text"
         placeholder="Search..."
-        className="mb-4 px-4 py-2 border border-gray-300 rounded-md w-full max-w-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
+        style={{
+          ...searchInputStyle,
+          ...(isSearchFocused ? searchInputFocusStyle : {})
+        }}
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
+        onFocus={() => setIsSearchFocused(true)}
+        onBlur={() => setIsSearchFocused(false)}
       />
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full text-sm text-gray-800 border-collapse">
+      <div style={tableContainerStyle}>
+        <table style={tableStyle}>
           <thead>
-            <tr className="border-b border-gray-200 bg-gray-50 text-xs uppercase text-gray-500 tracking-wider">
+            <tr style={tableHeadRowStyle}>
               {columns.map((col) => (
                 <th
                   key={col.accessor}
-                  className="px-5 py-3 text-left font-medium cursor-pointer select-none hover:text-gray-700"
+                  style={{
+                    ...tableHeadCellStyle,
+                    ...(hoveredHeaderCell === col.accessor ? tableHeadCellHoverStyle : {})
+                  }}
                   onClick={() => handleSort(col.accessor)}
+                  onMouseEnter={() => setHoveredHeaderCell(col.accessor)}
+                  onMouseLeave={() => setHoveredHeaderCell(null)}
                 >
                   {col.label}
                   {sortBy === col.accessor && (
-                    <span className="ml-1">{sortOrder === "asc" ? "↑" : "↓"}</span>
+                    <span style={{ marginLeft: "0.25rem" }}>
+                      {sortOrder === "asc" ? "↑" : "↓"}
+                    </span>
                   )}
                 </th>
               ))}
@@ -78,10 +197,15 @@ const Table = ({ columns, data, itemsPerPage = 5 }) => {
             {paginatedData.map((row, i) => (
               <tr
                 key={i}
-                className="border-b border-gray-100 hover:bg-gray-50 transition"
+                style={{
+                  ...tableBodyRowStyle,
+                  ...(hoveredRow === i ? tableBodyRowHoverStyle : {})
+                }}
+                onMouseEnter={() => setHoveredRow(i)}
+                onMouseLeave={() => setHoveredRow(null)}
               >
                 {columns.map((col) => (
-                  <td key={col.accessor} className="px-5 py-3">
+                  <td key={col.accessor} style={tableBodyCellStyle}>
                     {row[col.accessor]}
                   </td>
                 ))}
@@ -91,7 +215,7 @@ const Table = ({ columns, data, itemsPerPage = 5 }) => {
               <tr>
                 <td
                   colSpan={columns.length}
-                  className="text-center py-6 text-gray-400"
+                  style={noDataCellStyle}
                 >
                   No data found.
                 </td>
@@ -101,11 +225,17 @@ const Table = ({ columns, data, itemsPerPage = 5 }) => {
         </table>
       </div>
 
-      <div className="flex justify-between items-center mt-6 text-sm text-gray-600">
+      <div style={paginationContainerStyle}>
         <button
-          className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 transition disabled:opacity-50"
+          style={{
+            ...paginationButtonStyle,
+            ...(currentPage === 1 ? paginationButtonDisabledStyle : {}),
+            ...(hoveredPrevButton && currentPage !== 1 ? paginationButtonHoverStyle : {})
+          }}
           onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
           disabled={currentPage === 1}
+          onMouseEnter={() => setHoveredPrevButton(true)}
+          onMouseLeave={() => setHoveredPrevButton(false)}
         >
           Previous
         </button>
@@ -113,9 +243,15 @@ const Table = ({ columns, data, itemsPerPage = 5 }) => {
           Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
         </span>
         <button
-          className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 transition disabled:opacity-50"
+          style={{
+            ...paginationButtonStyle,
+            ...(currentPage === totalPages ? paginationButtonDisabledStyle : {}),
+            ...(hoveredNextButton && currentPage !== totalPages ? paginationButtonHoverStyle : {})
+          }}
           onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
           disabled={currentPage === totalPages}
+          onMouseEnter={() => setHoveredNextButton(true)}
+          onMouseLeave={() => setHoveredNextButton(false)}
         >
           Next
         </button>

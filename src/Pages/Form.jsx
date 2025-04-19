@@ -28,10 +28,10 @@ function Form() {
     <div className="p-4">
       <form onSubmit={handleSubmit}>
         <Inputfield
-          type="tel"
-          name="number"
-          label="Enter your phone number"
-          placeholder="1234456789"
+          type="email"
+          name="email"
+          label="Enter your email"
+          placeholder="abhishek@gmail.com"
           helperText="We will never share your number"
           errormsg={error}
           icon={<MdOutlineCall />}
@@ -40,13 +40,13 @@ function Form() {
           onChange={handleChange}
         />
         <Button
-          variant="secondary"
-          size="small"
+          variant="primary"
+          size="medium"
           text="Submit"
           icon={<MdTransitEnterexit />}
           loading={false}
           disabled={false}
-          onClick={() => showNotification({ type: "success", message: "Task completed!" })}
+          onClick={() => showNotification({ type: "error", message: "Task incompleted!" })}
         />
       </form>
     </div>

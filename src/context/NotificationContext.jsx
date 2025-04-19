@@ -1,6 +1,4 @@
-// src/context/NotificationContext.jsx
 import { createContext, useState, useCallback, useContext } from "react";
-import { v4 as uuidv4 } from "uuid";
 
 const NotificationContext = createContext();
 
@@ -8,9 +6,13 @@ export const useNotification = () => useContext(NotificationContext);
 
 export const NotificationProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
+  const [counter, setCounter] = useState(0);
 
   const showNotification = useCallback(({ type = "info", message, duration = 3000 }) => {
-    const id = uuidv4();
+    
+    const id = counter;
+    setCounter(prevCounter => prevCounter + 1);
+    
     const notification = { id, type, message };
 
     setNotifications((prev) => [...prev, notification]);
@@ -18,25 +20,67 @@ export const NotificationProvider = ({ children }) => {
     setTimeout(() => {
       setNotifications((prev) => prev.filter((n) => n.id !== id));
     }, duration);
-  }, []);
+  }, [counter]);
 
   const removeNotification = (id) => {
     setNotifications((prev) => prev.filter((n) => n.id !== id));
   };
 
+  const notificationContainerStyle = {
+    position: "fixed",
+    top: "1.25rem",
+    right: "1.25rem",
+    zIndex: 50,
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.75rem"
+  };
+
+  const getNotificationStyle = (type) => {
+    const baseStyle = {
+      padding: "0.5rem 1rem",
+      color: "white",
+      borderRadius: "0.375rem",
+      boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      minWidth: "250px"
+    };
+
+    
+    if (type === "success") {
+      baseStyle.backgroundColor = "#10b981"; 
+    } else if (type === "error") {
+      baseStyle.backgroundColor = "#ef4444"; 
+    } else {
+      baseStyle.backgroundColor = "#3b82f6"; 
+    }
+
+    return baseStyle;
+  };
+
+  const closeButtonStyle = {
+    marginLeft: "1rem",
+    color: "white",
+    background: "none",
+    border: "none",
+    cursor: "pointer",
+    fontSize: "1.5rem",
+    lineHeight: 1
+  };
+
   return (
     <NotificationContext.Provider value={{ showNotification }}>
       {children}
-      <div className="fixed top-5 right-5 z-50 space-y-3">
+      <div style={notificationContainerStyle}>
         {notifications.map((n) => (
-          <div
-            key={n.id}
-            className={`px-4 py-2 text-white rounded shadow-md flex justify-between items-center min-w-[250px]
-              ${n.type === "success" ? "bg-green-500" : n.type === "error" ? "bg-red-500" : "bg-blue-500"}
-            `}
-          >
+          <div key={n.id} style={getNotificationStyle(n.type)}>
             <span>{n.message}</span>
-            <button className="ml-4 text-white" onClick={() => removeNotification(n.id)}>
+            <button 
+              style={closeButtonStyle} 
+              onClick={() => removeNotification(n.id)}
+            >
               &times;
             </button>
           </div>
