@@ -254,5 +254,3 @@ npm install react-icons
 
 3. Import and use components as needed.
 
-## Styling
-Components use Tailwind CSS classes. Make sure you have Tailwind CSS configured in your project.
