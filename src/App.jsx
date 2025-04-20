@@ -9,10 +9,11 @@ import Checktable from './Pages/Checktable';
 function App() {
   return (
     <div>
-      <Form/>
+      <p>These are just test pages for testing components</p>
+      {/*<Form/>
       <Testmodal/>
       <Alertcomponent/>
-      <Checktable/>
+      <Checktable/>*/}
     </div>
   )
 }
